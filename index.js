@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-
 const initialData = `<!DOCTYPE html>
 <html lang="en">
 
@@ -19,12 +18,15 @@ const initialData = `<!DOCTYPE html>
 
     <main>`
 
+
 const endData = `
 </main>
 </body>
 
 </html>`
 
+
+// asks what the job title of the employee theyre adding is, then prompts questions related to that employee
 function loadEmployeePrompts() {
         inquirer
           .prompt([
@@ -61,7 +63,9 @@ function loadEmployeePrompts() {
     }
   }
   )  }         
-             
+     
+  
+//prompts intern questions 
 function internQ (){
 inquirer
     .prompt([
@@ -87,10 +91,12 @@ inquirer
       }
     ])    .then((answers)=>{
       console.log(answers);
-      writeAnswersToFile(answers);
+      makeAnswersHTML(answers);
   })}
 
   
+
+//prompts engineer questions
 function engineerQ (){
   inquirer
       .prompt([
@@ -116,10 +122,12 @@ function engineerQ (){
         }
       ])    .then((answers)=>{
         console.log(answers);
-        writeAnswersToFile(answers);
+        makeAnswersHTML(answers);
     })}
 
     
+
+//prompts manager questions
 function managerQ (){
   inquirer
       .prompt([
@@ -145,12 +153,14 @@ function managerQ (){
         }
       ])    .then((answers)=>{
         console.log(answers);
-        writeAnswersToFile(answers);
+        makeAnswersHTML(answers);
     })}
 
 
     
-    const writeAnswersToFile= (userAnswers)=>{
+
+//turns answers into HTML
+    const makeAnswersHTML= (userAnswers)=>{
 const jobData =`
             <section class="card camera">
             <h1>${userAnswers.name}</h1>
@@ -161,13 +171,11 @@ const jobData =`
           insertEmployee(jobData)
 
       }
-      // fs.appendFile(
-      //     'index.html',
-      //      jobData,
-      //      (error)=> error ? console.error(error) : console.log('Data-Saved')
-      //      )}
 
 
+
+
+//puts the Answers into an HTML File
 const insertEmployee = (jobData)=>{
 let HTMLdata = initialData + jobData + endData
       fs.appendFile(
