@@ -1,9 +1,12 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 let everySingleEmployee = ""
-const manager = "manager"
-const intern = "Intern"
-const engineer = "engineer"
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
+const nameManager = "Manager"
+const nameIntern = "Intern"
+const nameEngineer = "Engineer"
 const initialData = `<!DOCTYPE html>
 <html lang="en">
 
@@ -32,7 +35,7 @@ const endData = `
 
 // asks what the job title of the employee theyre adding is, then prompts questions related to that employee
 function loadEmployeePrompts() {
-        inquirer
+      return  inquirer
           .prompt([
     {
       type: "list",
@@ -72,12 +75,12 @@ function loadEmployeePrompts() {
 //prompts intern questions 
 function internQ (){
 
-inquirer
+return inquirer
     .prompt([
         {
             type: 'input',
             message:"What is the Interns School",
-            name:'employee',
+            name:'school',
         },
         {
           type: 'input',
@@ -100,20 +103,28 @@ inquirer
           name:'github',
       }
     ])    .then((answers)=>{
+      const intern = new Intern( 
+        nameIntern,
+        answers.name, 
+        answers.id, 
+        answers.email, 
+        answers.school, 
+        answers.github
+      )
       console.log(answers);
-      makeAnswersHTML(answers, intern);
+      makeAnswersHTML(intern);
   })}
 
   
 
 //prompts engineer questions
 function engineerQ (){
-  inquirer
+ return inquirer
       .prompt([
           {
               type: 'input',
               message:"What is the Engineers School",
-              name:'employee',
+              name:'school',
           },
           {
             type: 'input',
@@ -136,8 +147,16 @@ function engineerQ (){
             name:'github',
         }
       ])    .then((answers)=>{
+        const engineer = new Engineer( 
+          nameEngineer,
+          answers.name, 
+          answers.id, 
+          answers.email, 
+          answers.school, 
+          answers.github
+        )
         console.log(answers);
-        makeAnswersHTML(answers, engineer);
+        makeAnswersHTML(engineer);
     })}
 
     
@@ -145,12 +164,12 @@ function engineerQ (){
 //prompts manager questions
 function managerQ (){
 
-  inquirer
+  return inquirer
       .prompt([
           {
               type: 'input',
               message:"What is the Managers Office number",
-              name:'employee',
+              name:'office',
           },
           {
             type: 'input',
@@ -173,12 +192,22 @@ function managerQ (){
             name:'github',
         }
       ])    .then((answers)=>{
+        const manager = new Manager( 
+        nameManager,
+        answers.name, 
+        answers.id, 
+        answers.email, 
+        answers.office, 
+        answers.github
+      )
         console.log(answers);
-        makeAnswersHTML(answers, manager);
+        console.log(manager);
+        makeAnswersHTML(manager)
+        // makeAnswersHTML(answers, nameManager);
     })}
 
 function continueCreating (allEmployees){
-      inquirer
+    return  inquirer
         .prompt([
   {
     type: "list",
@@ -210,18 +239,33 @@ function continueCreating (allEmployees){
 
 //turns answers into HTML
 const makeAnswersHTML= (userAnswers, jobtitle)=>{
-  const jobData =`
+  if(userAnswers.jobTitle === "Manager"){
+    console.log("Manager" + userAnswers)
+  let jobData =`
             <section class="card camera">
-            <h1>${jobtitle}</h1>
+            <h1>${userAnswers.jobTitle}</h1>
             <h1>${userAnswers.name}</h1>
-            <h2>${userAnswers.employee}</h2>
+            <h2>${userAnswers.officeNumber}</h2>
             <p>ID: ${userAnswers.id}</p>
             <p>Email: ${userAnswers.email}</p>
-            <a href="https://github.com/${userAnswers.github}" >GitHub: https://github.com/${userAnswers.github}</a>
+            <a href="https://github.com/${userAnswers.github}" target="_blank" >GitHub: https://github.com/${userAnswers.github}</a>
             </section>`
-          createEmployee(jobData)
+          return createEmployee(jobData)
+  } else {
+    console.log("not manager" + userAnswers)
+    let jobData =`
+    <section class="card camera">
+    <h1>${userAnswers.jobTitle}</h1>
+    <h1>${userAnswers.name}</h1>
+    <h2>${userAnswers.school}</h2>
+    <p>ID: ${userAnswers.id}</p>
+    <p>Email: ${userAnswers.email}</p>
+    <a href="https://github.com/${userAnswers.github}" target="_blank" >GitHub: https://github.com/${userAnswers.github}</a>
+    </section>`
+  return createEmployee(jobData)
+  }
+        }
 
-}
 
 
 const createEmployee= (jobData)=>{
@@ -248,3 +292,5 @@ let HTMLdata = initialData + jobData + endData
 
 
  loadEmployeePrompts()
+
+module.exports = loadEmployeePrompts
