@@ -1,5 +1,9 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+let everySingleEmployee = ""
+const manager = "manager"
+const intern = "Intern"
+const engineer = "engineer"
 const initialData = `<!DOCTYPE html>
 <html lang="en">
 
@@ -67,6 +71,7 @@ function loadEmployeePrompts() {
   
 //prompts intern questions 
 function internQ (){
+
 inquirer
     .prompt([
         {
@@ -91,7 +96,7 @@ inquirer
       }
     ])    .then((answers)=>{
       console.log(answers);
-      makeAnswersHTML(answers);
+      makeAnswersHTML(answers, intern);
   })}
 
   
@@ -122,13 +127,14 @@ function engineerQ (){
         }
       ])    .then((answers)=>{
         console.log(answers);
-        makeAnswersHTML(answers);
+        makeAnswersHTML(answers, engineer);
     })}
 
     
 
 //prompts manager questions
 function managerQ (){
+
   inquirer
       .prompt([
           {
@@ -153,30 +159,70 @@ function managerQ (){
         }
       ])    .then((answers)=>{
         console.log(answers);
-        makeAnswersHTML(answers);
+        makeAnswersHTML(answers, manager);
     })}
 
-
+function continueCreating (allEmployees){
+      inquirer
+        .prompt([
+  {
+    type: "list",
+    name: "moreEmployees",
+    message: "Would you like to input more employees?",
+    choices: [
+      {
+        name: "Yes",
+        value: "yes"
+      },
+      {
+        name: "No",
+        value: "no"
+      },
+    ]
+  }])
+.then(res => {
+  let choice = res.moreEmployees;
+  switch (choice) {
+    case "yes":
+      loadEmployeePrompts();
+      break;
+    case "no":
+      insertEmployees(allEmployees);
+  }
+}
+)  }
     
 
 //turns answers into HTML
-    const makeAnswersHTML= (userAnswers)=>{
-const jobData =`
+const makeAnswersHTML= (userAnswers, jobtitle)=>{
+  const jobData =`
             <section class="card camera">
+            <h1>${jobtitle}</h1>
             <h1>${userAnswers.name}</h1>
             <h2>${userAnswers.employee}</h2>
             <p>ID: ${userAnswers.id}</p>
             <p>Email: ${userAnswers.email}</p>
             </section>`
-          insertEmployee(jobData)
+          createEmployee(jobData)
 
-      }
+}
+
+
+const createEmployee= (jobData)=>{
+  everySingleEmployee = jobData + everySingleEmployee
+  console.log(everySingleEmployee)
+  continueCreating(everySingleEmployee)
+
+
+
+    
+}
 
 
 
 
 //puts the Answers into an HTML File
-const insertEmployee = (jobData)=>{
+const insertEmployees = (jobData)=>{
 let HTMLdata = initialData + jobData + endData
       fs.appendFile(
           'index.html',
