@@ -93,6 +93,11 @@ inquirer
           type: 'input',
           message:"What is the Employees Email",
           name:'email',
+      },
+      {
+          type: 'input',
+          message:"What is the Employees Github Username",
+          name:'github',
       }
     ])    .then((answers)=>{
       console.log(answers);
@@ -124,6 +129,11 @@ function engineerQ (){
             type: 'input',
             message:"What is the Employees Email",
             name:'email',
+        },
+        {
+            type: 'input',
+            message:"What is the Employees Github Username",
+            name:'github',
         }
       ])    .then((answers)=>{
         console.log(answers);
@@ -156,6 +166,11 @@ function managerQ (){
             type: 'input',
             message:"What is the Employees Email",
             name:'email',
+        },
+        {
+            type: 'input',
+            message:"What is the Employees Github Username",
+            name:'github',
         }
       ])    .then((answers)=>{
         console.log(answers);
@@ -202,6 +217,7 @@ const makeAnswersHTML= (userAnswers, jobtitle)=>{
             <h2>${userAnswers.employee}</h2>
             <p>ID: ${userAnswers.id}</p>
             <p>Email: ${userAnswers.email}</p>
+            <a href="https://github.com/${userAnswers.github}" >GitHub: https://github.com/${userAnswers.github}</a>
             </section>`
           createEmployee(jobData)
 
